@@ -8,6 +8,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,11 +24,15 @@ class HttpCollectorClient extends CollectorClient {
     private final URL collectorURL;
     private final long deadlineMillis;
 
+    private static final Logger logger = LoggerFactory.getLogger(HttpCollectorClient.class);
+
+
     HttpCollectorClient(
             AbstractTracer tracer,
             URL collectorURL,
             long deadlineMillis
     ) {
+        logger.info("Creating a HttpCollectorClient..");
         this.client = new AtomicReference<>(start(deadlineMillis));
         this.tracer = tracer;
         this.collectorURL = collectorURL;
@@ -45,6 +51,7 @@ class HttpCollectorClient extends CollectorClient {
 
     @Override
     void reconnect() {
+        logger.info("reconnecting..");
         shutdown(this.client.getAndSet(start(this.deadlineMillis)));
     }
 

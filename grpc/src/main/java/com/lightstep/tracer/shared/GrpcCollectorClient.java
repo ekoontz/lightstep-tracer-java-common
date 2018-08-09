@@ -13,6 +13,9 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class GrpcCollectorClient extends CollectorClient {
   private final ManagedChannelBuilder<?> channelBuilder;
   private ManagedChannel channel;
@@ -20,7 +23,9 @@ class GrpcCollectorClient extends CollectorClient {
   private final AbstractTracer tracer;
   private final long deadlineMillis;
 
-  /**
+  private static final Logger logger = LoggerFactory.getLogger(GrpcCollectorClient.class);
+
+    /**
    * Constructor client for accessing CollectorService using the existing channel
    */
   GrpcCollectorClient(
@@ -63,7 +68,9 @@ class GrpcCollectorClient extends CollectorClient {
   }
 
   private synchronized void connect() {
+    logger.info("GRPCConnectorClient:connect()ing..");
     channel = channelBuilder.build();
+    logger.info("GRPCConnectorClient:created channel.");
     blockingStub = CollectorServiceGrpc.newBlockingStub(channel);
   }
 

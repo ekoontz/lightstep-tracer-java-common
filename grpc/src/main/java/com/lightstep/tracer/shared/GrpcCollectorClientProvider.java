@@ -41,6 +41,7 @@ public class GrpcCollectorClientProvider extends CollectorClientProvider {
             );
         } catch (ManagedChannelProvider.ProviderNotFoundException e) {
             // TODO - let the user know that they need to include a grpc channel dependency.
+            System.out.println("exception when creating GRPC client: " + e);
             return null;
         }
     }
